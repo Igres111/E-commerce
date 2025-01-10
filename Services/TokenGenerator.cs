@@ -1,5 +1,6 @@
 ﻿using E_commerce.Data;
 using E_commerce.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -59,21 +60,21 @@ namespace E_commerce.Services
             await _context.SaveChangesAsync();
             return refreshToken;
         }
-        //public async Task<string> RefreshAccessTokenAsync(string refreshTokenInput)
-        //{
-        //    var refreshToken = await _context.RefreshTokens
-        //        .Include(el => el.User)
-        //        .FirstOrDefaultAsync(el => el.Token == refreshTokenInput);
-        //    if (refreshToken == null || refreshToken.ExpirationDate < DateTime.Now)
-        //    {
-        //        throw new SecurityTokenException("Refresh token expired or invalid");
-        //    }
-        //    var newAccessToken = CreateAccessToken(refreshToken.User);
-        //    var newRefreshToken = await CreateRefreshTokenAsync(refreshToken.User);
+        public async Task<string> RefreshAccessTokenAsync(string refreshTokenInput)
+        {
+            var refreshToken = await _context.RefreshTokens.Include(el => el.User)
+                .Include(el => el.User)
+                .FirstOrDefaultAsync(el => el.Token == refreshTokenInput);
+            if (refreshToken == null || refreshToken.ExpirationDate < DateTime.Now)
+            {
+                throw new SecurityTokenException("Refresh token expired or invalid");
+            }
+            var newAccessToken = CreateAccessToken(refreshToken.User);
+            var newRefreshToken = await CreateRefreshTokenAsync(refreshToken.User);
 
-        //    _context.RefreshTokens.Remove(refreshToken);
-        //    await _context.SaveChangesAsync();
-        //    return newAccessToken;
-        //}
+            _context.RefreshTokens.Remove(refreshToken);
+            await _context.SaveChangesAsync();
+            return newAccessToken;
+        }
     }
 }

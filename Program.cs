@@ -1,5 +1,6 @@
 using DotNetEnv;
 using E_commerce.Data;
+using E_commerce.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -24,6 +25,7 @@ builder.Services.AddDbContext<Context>(options =>
 {
     options.UseSqlServer(connection);
 });
+builder.Services.AddScoped<TokenGenerator>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(x =>
     {

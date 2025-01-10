@@ -1,16 +1,14 @@
-﻿namespace E_commerce.Models
+﻿namespace E_commerce.DTOs
 {
-    public class User
+    public class RegisterUserDto
     {
-        public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
-        public string PhoneNumber { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
-        public List<RefreshToken> RefreshTokens { get; set; }
 
     }
 }
