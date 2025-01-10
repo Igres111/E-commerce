@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <Folder Include="Logic\" />
-    <Folder Include="Presentation\DTOs\" />
+    <Folder Include="DTOs\" />
   </ItemGroup>
 
 </Project>
