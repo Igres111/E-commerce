@@ -31,13 +31,14 @@ namespace E_commerce.Controllers
             if(!ModelState.IsValid)
             {
                 return BadRequest("Invalid data");
-            }
+            }  
             var result = new User
             {
                 Id = Guid.NewGuid(),
                 Name = user.Name,
                 Email = user.Email,
-                Password = user.Password,
+                PhoneNumber = user.PhoneNumber,
+                Password = BCrypt.Net.BCrypt.HashPassword(user.Password),
                 Role = user.Role
             };
             await _context.Users.AddAsync(result);
@@ -57,6 +58,29 @@ namespace E_commerce.Controllers
                 return Ok(result);
             }
             return BadRequest("Invalid credentials");
+        }
+        [HttpPost("Refresh-Token")]
+        public async Task<ActionResult> RefreshToken(string refreshToken)
+        {
+            var newAccessToken = await _token.RefreshAccessTokenAsync(refreshToken);
+            return Ok(newAccessToken);
+        }
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateInfo(Guid id, UpdateUserDto user )
+        {
+            var target = await _context.Users.FirstOrDefaultAsync(el => el.Id == id);
+            if (target == null)
+            {
+                return NotFound("User not found");
+            }
+            target.Name = user.Name;
+            target.LastName = user.LastName;
+            target.Address = user.Address;
+            target.PhoneNumber = user.PhoneNumber;
+            target.Email = user.Email;
+            target.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            await _context.SaveChangesAsync();
+            return Ok(target);
         }
     }
 }
