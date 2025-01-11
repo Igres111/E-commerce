@@ -1,6 +1,7 @@
 ﻿using E_commerce.Data;
 using E_commerce.DTOs;
 using E_commerce.Models;
+using E_commerce.Repositories;
 using E_commerce.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,15 +15,17 @@ namespace E_commerce.Controllers
     {
         public readonly Context _context;
         public readonly TokenGenerator _token;
-        public UserController(Context context, TokenGenerator token)
+        public IUser _methods;
+        public UserController(Context context, TokenGenerator token, IUser methods)
         {
             _context = context;
             _token = token;
+            _methods = methods;
         }
         [HttpGet]
         public async Task<ActionResult> GetUsers()
         {
-            var result = await _context.Users.ToListAsync();
+            var result = await _methods.GetUsers();
             return Ok(result);
         }
         [HttpPost("Register")]
@@ -32,32 +35,18 @@ namespace E_commerce.Controllers
             {
                 return BadRequest("Invalid data");
             }  
-            var result = new User
-            {
-                Id = Guid.NewGuid(),
-                Name = user.Name,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
-                Password = BCrypt.Net.BCrypt.HashPassword(user.Password),
-                Role = user.Role
-            };
-            await _context.Users.AddAsync(result);
-            await _context.SaveChangesAsync();
-            return Ok(result);
+            await _methods.RegisterUser(user);
+            return Ok("Registered");
         }
         [HttpPost("Login")]
         public async Task<ActionResult> Login(LoginUserDto user)
         {
-            var emailOrPhone = await _context.Users
-                .FirstOrDefaultAsync(el => el.Email == user.EmailOrPhone || el.PhoneNumber == user.EmailOrPhone);
-        
-            if (emailOrPhone != null)
+            if(!ModelState.IsValid) 
             {
-                _token.CreateAccessToken(emailOrPhone);
-                var result = await _token.CreateRefreshTokenAsync(emailOrPhone);
-                return Ok(result);
+                return BadRequest("Invalid data");
             }
-            return BadRequest("Invalid credentials");
+            await _methods.LoginUser(user);
+            return Ok();
         }
         [HttpPost("Refresh-Token")]
         public async Task<ActionResult> RefreshToken(string refreshToken)
