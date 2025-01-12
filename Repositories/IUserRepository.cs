@@ -56,5 +56,17 @@ namespace E_commerce.Repositories
                 var result = await _token.CreateRefreshTokenAsync(emailOrPhone);
             } 
         }
+        public async Task UpdateUser(Guid id, UpdateUserDto user)
+        {
+            var target = await _context.Users.FirstOrDefaultAsync(el => el.Id == id) 
+                ?? throw new Exception("User not found"); ;
+            target.Name = user.Name;
+            target.LastName = user.LastName;
+            target.Address = user.Address;
+            target.PhoneNumber = user.PhoneNumber;
+            target.Email = user.Email;
+            target.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+            await _context.SaveChangesAsync();
+        }
     }
 }

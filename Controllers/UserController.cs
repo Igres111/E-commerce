@@ -57,19 +57,8 @@ namespace E_commerce.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateInfo(Guid id, UpdateUserDto user )
         {
-            var target = await _context.Users.FirstOrDefaultAsync(el => el.Id == id);
-            if (target == null)
-            {
-                return NotFound("User not found");
-            }
-            target.Name = user.Name;
-            target.LastName = user.LastName;
-            target.Address = user.Address;
-            target.PhoneNumber = user.PhoneNumber;
-            target.Email = user.Email;
-            target.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-            await _context.SaveChangesAsync();
-            return Ok(target);
+            await _methods.UpdateUser(id, user);
+            return Ok();
         }
     }
 }
