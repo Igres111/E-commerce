@@ -7,6 +7,8 @@ namespace E_commerce.Data
     {
         public Context(DbContextOptions options) : base(options) { }
         public DbSet<User> Users { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<UserForProduct> UserForProducts { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -18,6 +20,20 @@ namespace E_commerce.Data
                 .HasForeignKey(entity => entity.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
             });
+            modelBuilder.Entity<UserForProduct>(entity =>
+            {
+                entity.HasKey(entity => entity.Id);
+
+                entity.HasOne(entity => entity.Product)
+                .WithMany(entity => entity.UserForProducts)
+                .HasForeignKey(entity => entity.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(entity => entity.User)
+               .WithMany(entity => entity.UserForProducts)
+               .HasForeignKey(entity => entity.UserId)
+               .OnDelete(DeleteBehavior.Cascade);
+            });
         }
-}
+    }
 }
