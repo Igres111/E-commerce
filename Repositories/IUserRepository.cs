@@ -1,5 +1,6 @@
 ﻿using E_commerce.Data;
-using E_commerce.DTOs;
+using E_commerce.DTOs.TokenDtos;
+using E_commerce.DTOs.UserDtos;
 using E_commerce.Models;
 using E_commerce.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -40,7 +41,7 @@ namespace E_commerce.Repositories
             await _context.Users.AddAsync(result);
             await _context.SaveChangesAsync();
         }
-        public async Task LoginUser(LoginUserDto user)
+        public async Task<TokenResponseDto> LoginUser(LoginUserDto user)
         {
             var emailOrPhone = await _context.Users
                 .FirstOrDefaultAsync(el => el.Email == user.EmailOrPhone || el.PhoneNumber == user.EmailOrPhone);
@@ -52,9 +53,11 @@ namespace E_commerce.Repositories
                 { 
                  _context.RefreshTokens.Remove(tokenExist);
                 }
-                _token.CreateAccessToken(emailOrPhone);
-                var result = await _token.CreateRefreshTokenAsync(emailOrPhone);
-            } 
+                var accessToken =_token.CreateAccessToken(emailOrPhone);
+                var refreshToken = await _token.CreateRefreshTokenAsync(emailOrPhone);
+                return new TokenResponseDto { AccessToken = accessToken, RefreshToken = refreshToken.Token };
+            }
+           throw new Exception("Invalid credentials");
         }
         public async Task UpdateUser(Guid id, UpdateUserDto user)
         {

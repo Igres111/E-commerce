@@ -1,4 +1,4 @@
-﻿namespace E_commerce.DTOs
+﻿namespace E_commerce.DTOs.UserDtos
 {
     public class LoginUserDto
     {

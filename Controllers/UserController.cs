@@ -1,5 +1,5 @@
 ﻿using E_commerce.Data;
-using E_commerce.DTOs;
+using E_commerce.DTOs.UserDtos;
 using E_commerce.Models;
 using E_commerce.Repositories;
 using E_commerce.Services;
@@ -45,8 +45,8 @@ namespace E_commerce.Controllers
             {
                 return BadRequest("Invalid data");
             }
-            await _methods.LoginUser(user);
-            return Ok();
+           var result = await _methods.LoginUser(user);
+            return Ok(result);
         }
         [HttpPost("Refresh-Token")]
         public async Task<ActionResult> RefreshToken(string refreshToken)
