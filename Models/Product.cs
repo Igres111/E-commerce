@@ -9,7 +9,6 @@
         public float DiscountPrice { get; set; }
         public int DiscountPercent { get; set; }
         public string? Color { get; set; } = string.Empty;
-        public bool Favorite { get; set; }
         public string Category { get; set; } = string.Empty;
         public string Image { get; set; } = string.Empty;
         public int? Rating { get; set; }

@@ -60,5 +60,29 @@ namespace E_commerce.Controllers
             await _methods.UpdateUser(id, user);
             return Ok();
         }
+        [HttpPost("Add-Favorite")]
+        public async Task<ActionResult> AddFavorite(UserFavProduct favourite)
+        {
+            var result = await _context.Users.FirstOrDefaultAsync(x => x.Id == favourite.UserId);
+            if (result == null)
+            {
+                return BadRequest("User not found");
+            }
+            result.Favorite.Add(favourite.ProductId);
+            await _context.SaveChangesAsync();
+            return Ok(result.Favorite);
+        }
+        [HttpPost("Remove-Favorite")]
+        public async Task<ActionResult> RemoveFavorite(UserFavProduct favourite)
+        {
+            var result = await _context.Users.FirstOrDefaultAsync(x => x.Id == favourite.UserId);
+            if (result == null)
+            {
+                return BadRequest("User not found");
+            }
+            result.Favorite.Remove(favourite.ProductId);
+            await _context.SaveChangesAsync();
+            return Ok(result.Favorite);
+        }
     }
 }

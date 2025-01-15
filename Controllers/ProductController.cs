@@ -31,6 +31,24 @@ namespace E_commerce.Controllers
                 .ToListAsync();
             return Ok(result);
         }
+        [HttpGet("Get-Product/Seller")]
+        public async Task<IActionResult> GetProductSeller()
+        {
+            var result = await _context.Products
+                .OrderByDescending(x => x.PurchasedCount)
+                .Take(4)
+                .ToListAsync();
+            return Ok(result);
+        }
+        [HttpGet("Get-Product/Explore")]
+        public async Task<IActionResult> GetProductExplore()
+        {
+            var result = await _context.Products
+                .OrderByDescending(x => x.CreateDate)
+                .Take(8)
+                .ToListAsync();
+            return Ok(result);
+        }
         [HttpPost("Add-Product")]
         public async Task<IActionResult> AddProduct(AddProductDto product)
         {
@@ -42,7 +60,6 @@ namespace E_commerce.Controllers
                 Description = product.Description,
                 DiscountPrice = product.DiscountPrice,
                 Color = product.Color,
-                Favorite = false,
                 Image = product.Image,
                 Stock = product.Stock,
                 Rating = product.Rating,
