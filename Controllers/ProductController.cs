@@ -17,9 +17,18 @@ namespace E_commerce.Controllers
             _context = context;
         }
         [HttpGet("All-Products")]
-        public async Task<IActionResult> GetProduct()
+        public async Task<IActionResult> GetProducts()
         {
             var result = await _context.Products.ToListAsync();
+            return Ok(result);
+        }
+        [HttpGet("Get-Product/Discount")]
+        public async Task<IActionResult> GetProductDiscount()
+        {
+            var result = await _context.Products
+                .OrderByDescending(x => x.DiscountPrice)
+                .Take(5)
+                .ToListAsync();
             return Ok(result);
         }
         [HttpPost("Add-Product")]
@@ -39,7 +48,8 @@ namespace E_commerce.Controllers
                 Rating = product.Rating,
                 ReviewCount = product.ReviewCount,
                 Category = product.Category,
-                DiscountPercent = product.DiscountPercent
+                DiscountPercent = product.DiscountPercent,
+                CreateDate = DateTime.Now
             };
             await _context.Products.AddAsync(result);
             await _context.SaveChangesAsync();

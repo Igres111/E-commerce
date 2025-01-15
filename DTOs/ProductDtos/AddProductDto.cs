@@ -13,5 +13,6 @@
         public int Rating { get; set; }
         public int ReviewCount { get; set; }
         public int Stock { get; set; }
+
     }
 }
