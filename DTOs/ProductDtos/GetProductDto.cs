@@ -1,8 +1,7 @@
-﻿namespace E_commerce.Models
+﻿namespace E_commerce.DTOs.ProductDtos
 {
-    public class Product
+    public class GetProductDto
     {
-        public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; } = string.Empty;
         public float Price { get; set; }
@@ -15,8 +14,5 @@
         public int? Rating { get; set; }
         public int? ReviewCount { get; set; }
         public int Stock { get; set; }
-        public int PurchasedCount { get; set; }
-        public DateTime CreateDate { get; set; }
-        public List<UserForProduct> UserForProducts { get; set; }
     }
 }

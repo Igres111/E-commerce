@@ -46,6 +46,11 @@ namespace E_commerce.Controllers
 
             return Ok("Product Added");
         }
-
+        [HttpGet("Get-Product/{category}")]
+        public async Task<IActionResult> GetCategory(string category)
+        {
+            var result = await _context.Products.FirstOrDefaultAsync(x => x.Category == category);
+            return Ok(result);
+        }
     }
 }

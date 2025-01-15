@@ -55,7 +55,12 @@ namespace E_commerce.Repositories
                 }
                 var accessToken =_token.CreateAccessToken(emailOrPhone);
                 var refreshToken = await _token.CreateRefreshTokenAsync(emailOrPhone);
-                return new TokenResponseDto { AccessToken = accessToken, RefreshToken = refreshToken.Token };
+                return new TokenResponseDto 
+                {
+                    Id = emailOrPhone.Id,
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken.Token
+                };
             }
            throw new Exception("Invalid credentials");
         }
