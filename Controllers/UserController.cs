@@ -1,4 +1,5 @@
 ﻿using E_commerce.Data;
+using E_commerce.DTOs.ProductDtos;
 using E_commerce.DTOs.UserDtos;
 using E_commerce.Models;
 using E_commerce.Repositories;
@@ -6,6 +7,7 @@ using E_commerce.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace E_commerce.Controllers
 {
@@ -72,17 +74,43 @@ namespace E_commerce.Controllers
             await _context.SaveChangesAsync();
             return Ok(result.Favorite);
         }
-        [HttpPost("Remove-Favorite")]
+        [HttpDelete("Remove-Favorite")]
         public async Task<ActionResult> RemoveFavorite(UserFavProduct favourite)
         {
             var result = await _context.Users.FirstOrDefaultAsync(x => x.Id == favourite.UserId);
-            if (result == null)
+            if (result == null || !result.Favorite.Contains(favourite.ProductId))
             {
-                return BadRequest("User not found");
+                return BadRequest("User not found or Product is not selected as Favourite");
             }
             result.Favorite.Remove(favourite.ProductId);
             await _context.SaveChangesAsync();
             return Ok(result.Favorite);
+        }
+        [HttpGet("Get-Favorites/{userId}")]
+        public async Task<ActionResult> GetFavorites(Guid userId)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            if (user != null) 
+            {
+                var result = await _context.Products
+                     .Where(product => user.Favorite.Contains(product.Id))
+                     .ToListAsync();
+                return Ok(result.Select(x => new AddProductDto
+                {
+                    Name = x.Name,
+                    Price = x.Price,
+                    Description = x.Description,
+                    Image = x.Image,
+                    Category = x.Category,
+                    Color = x.Color,
+                    DiscountPercent = x.DiscountPercent,
+                    DiscountPrice = x.DiscountPrice,
+                    Stock = x.Stock,
+                    Rating = x.Rating,
+                    ReviewCount = x.ReviewCount
+                }));
+            }
+            return BadRequest();
         }
     }
 }

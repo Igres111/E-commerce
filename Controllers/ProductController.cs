@@ -26,7 +26,7 @@ namespace E_commerce.Controllers
         public async Task<IActionResult> GetProductDiscount()
         {
             var result = await _context.Products
-                .OrderByDescending(x => x.DiscountPrice)
+                .OrderByDescending(x => x.DiscountPercent)
                 .Take(5)
                 .ToListAsync();
             return Ok(result);

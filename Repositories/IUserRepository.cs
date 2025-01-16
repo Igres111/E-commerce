@@ -36,7 +36,8 @@ namespace E_commerce.Repositories
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 Password = BCrypt.Net.BCrypt.HashPassword(user.Password),
-                Role = user.Role
+                Role = user.Role,
+                Favorite = new List<Guid>(),
             };
             await _context.Users.AddAsync(result);
             await _context.SaveChangesAsync();
