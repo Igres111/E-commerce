@@ -1,4 +1,5 @@
 ﻿using E_commerce.Data;
+using E_commerce.DTOs.ProductDtos;
 using E_commerce.DTOs.TokenDtos;
 using E_commerce.DTOs.UserDtos;
 using E_commerce.Models;
@@ -76,6 +77,53 @@ namespace E_commerce.Repositories
             target.Email = user.Email;
             target.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
             await _context.SaveChangesAsync();
+        }
+        public async Task<List<Guid>> AddFav(UserFavProduct favorite)
+        {
+            var result = await _context.Users.FirstOrDefaultAsync(x => x.Id == favorite.UserId);
+            if (result == null)
+            {
+                throw new Exception("User Not Found");
+            }
+            result.Favorite.Add(favorite.ProductId);
+            await _context.SaveChangesAsync();
+            return result.Favorite;
+        }
+        public async Task<List<Guid>> RemoveFav(UserFavProduct favorite)
+        {
+            var result = await _context.Users.FirstOrDefaultAsync(x => x.Id == favorite.UserId);
+            if (result == null || !result.Favorite.Contains(favorite.ProductId))
+            {
+                throw new Exception("User not found or Product is not selected as Favourite");
+            }
+            result.Favorite.Remove(favorite.ProductId);
+            await _context.SaveChangesAsync();
+            return result.Favorite;
+        }
+       public async Task<IEnumerable<AddProductDto>> GetFav(Guid userId)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            if (user != null)
+            {
+                var result = await _context.Products
+                     .Where(product => user.Favorite.Contains(product.Id))
+                     .ToListAsync();
+                return result.Select(x => new AddProductDto
+                {
+                    Name = x.Name,
+                    Price = x.Price,
+                    Description = x.Description,
+                    Image = x.Image,
+                    Category = x.Category,
+                    Color = x.Color,
+                    DiscountPercent = x.DiscountPercent,
+                    DiscountPrice = x.DiscountPrice,
+                    Stock = x.Stock,
+                    Rating = x.Rating,
+                    ReviewCount = x.ReviewCount
+                });
+            }
+            throw new Exception("User doesn't exist");
         }
     }
 }

@@ -63,54 +63,22 @@ namespace E_commerce.Controllers
             return Ok();
         }
         [HttpPost("Add-Favorite")]
-        public async Task<ActionResult> AddFavorite(UserFavProduct favourite)
+        public async Task<ActionResult> AddFavorite(UserFavProduct favorite)
         {
-            var result = await _context.Users.FirstOrDefaultAsync(x => x.Id == favourite.UserId);
-            if (result == null)
-            {
-                return BadRequest("User not found");
-            }
-            result.Favorite.Add(favourite.ProductId);
-            await _context.SaveChangesAsync();
-            return Ok(result.Favorite);
+            var favs = await _methods.AddFav(favorite);
+            return Ok(favs);
         }
         [HttpDelete("Remove-Favorite")]
-        public async Task<ActionResult> RemoveFavorite(UserFavProduct favourite)
+        public async Task<ActionResult> RemoveFavorite(UserFavProduct favorite)
         {
-            var result = await _context.Users.FirstOrDefaultAsync(x => x.Id == favourite.UserId);
-            if (result == null || !result.Favorite.Contains(favourite.ProductId))
-            {
-                return BadRequest("User not found or Product is not selected as Favourite");
-            }
-            result.Favorite.Remove(favourite.ProductId);
-            await _context.SaveChangesAsync();
-            return Ok(result.Favorite);
+            var favs = await _methods.RemoveFav(favorite);
+            return Ok(favs);
         }
         [HttpGet("Get-Favorites/{userId}")]
         public async Task<ActionResult> GetFavorites(Guid userId)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
-            if (user != null) 
-            {
-                var result = await _context.Products
-                     .Where(product => user.Favorite.Contains(product.Id))
-                     .ToListAsync();
-                return Ok(result.Select(x => new AddProductDto
-                {
-                    Name = x.Name,
-                    Price = x.Price,
-                    Description = x.Description,
-                    Image = x.Image,
-                    Category = x.Category,
-                    Color = x.Color,
-                    DiscountPercent = x.DiscountPercent,
-                    DiscountPrice = x.DiscountPrice,
-                    Stock = x.Stock,
-                    Rating = x.Rating,
-                    ReviewCount = x.ReviewCount
-                }));
-            }
-            return BadRequest();
+            var result = await _methods.GetFav(userId);
+            return Ok(result);
         }
     }
 }
