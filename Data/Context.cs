@@ -10,6 +10,7 @@ namespace E_commerce.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<UserForProduct> UserForProducts { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<BillingInfo> BillingInfos { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().HasKey(entity => entity.Id);
@@ -33,6 +34,15 @@ namespace E_commerce.Data
                .WithMany(entity => entity.UserForProducts)
                .HasForeignKey(entity => entity.UserId)
                .OnDelete(DeleteBehavior.Cascade);
+            });
+            modelBuilder.Entity<BillingInfo>(entity =>
+            {
+                entity.HasKey(entity => entity.Id);
+
+                entity.HasOne(entity => entity.User)
+                .WithMany(entity => entity.billingInfos)
+                .HasForeignKey(entity => entity.UserId) 
+                .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_commerce.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20250115140215_Add some changes")]
-    partial class Addsomechanges
+    [Migration("20250116154801_Added Billing Db")]
+    partial class AddedBillingDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,48 @@ namespace E_commerce.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("E_commerce.Models.BillingInfo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Adress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AdressDetails")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompanyName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("BillingInfos");
+                });
 
             modelBuilder.Entity("E_commerce.Models.Product", b =>
                 {
@@ -49,9 +91,6 @@ namespace E_commerce.Migrations
 
                     b.Property<float>("DiscountPrice")
                         .HasColumnType("real");
-
-                    b.Property<bool>("Favorite")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Image")
                         .IsRequired()
@@ -121,6 +160,10 @@ namespace E_commerce.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Favorite")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -173,6 +216,17 @@ namespace E_commerce.Migrations
                     b.ToTable("UserForProducts");
                 });
 
+            modelBuilder.Entity("E_commerce.Models.BillingInfo", b =>
+                {
+                    b.HasOne("E_commerce.Models.User", "User")
+                        .WithMany("billingInfos")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("E_commerce.Models.RefreshToken", b =>
                 {
                     b.HasOne("E_commerce.Models.User", "User")
@@ -213,6 +267,8 @@ namespace E_commerce.Migrations
                     b.Navigation("RefreshTokens");
 
                     b.Navigation("UserForProducts");
+
+                    b.Navigation("billingInfos");
                 });
 #pragma warning restore 612, 618
         }

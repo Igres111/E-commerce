@@ -66,7 +66,8 @@ namespace E_commerce.Controllers
                 ReviewCount = product.ReviewCount,
                 Category = product.Category,
                 DiscountPercent = product.DiscountPercent,
-                CreateDate = DateTime.Now
+                CreateDate = DateTime.Now,
+                PurchasedCount = product.PurchasedCount
             };
             await _context.Products.AddAsync(result);
             await _context.SaveChangesAsync();

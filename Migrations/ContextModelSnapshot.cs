@@ -22,6 +22,48 @@ namespace E_commerce.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("E_commerce.Models.BillingInfo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Adress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AdressDetails")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompanyName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("BillingInfos");
+                });
+
             modelBuilder.Entity("E_commerce.Models.Product", b =>
                 {
                     b.Property<Guid>("Id")
@@ -171,6 +213,17 @@ namespace E_commerce.Migrations
                     b.ToTable("UserForProducts");
                 });
 
+            modelBuilder.Entity("E_commerce.Models.BillingInfo", b =>
+                {
+                    b.HasOne("E_commerce.Models.User", "User")
+                        .WithMany("billingInfos")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("E_commerce.Models.RefreshToken", b =>
                 {
                     b.HasOne("E_commerce.Models.User", "User")
@@ -211,6 +264,8 @@ namespace E_commerce.Migrations
                     b.Navigation("RefreshTokens");
 
                     b.Navigation("UserForProducts");
+
+                    b.Navigation("billingInfos");
                 });
 #pragma warning restore 612, 618
         }

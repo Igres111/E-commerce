@@ -13,6 +13,8 @@
         public int? Rating { get; set; }
         public int? ReviewCount { get; set; }
         public int Stock { get; set; }
+        public int PurchasedCount { get; set; }
+        public DateTime CreateDate { get; set; }
 
     }
 }

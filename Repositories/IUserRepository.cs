@@ -120,7 +120,9 @@ namespace E_commerce.Repositories
                     DiscountPrice = x.DiscountPrice,
                     Stock = x.Stock,
                     Rating = x.Rating,
-                    ReviewCount = x.ReviewCount
+                    ReviewCount = x.ReviewCount,
+                    CreateDate = x.CreateDate,
+                    PurchasedCount = x.PurchasedCount
                 });
             }
             throw new Exception("User doesn't exist");
