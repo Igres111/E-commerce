@@ -28,11 +28,11 @@ namespace E_commerce.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Adress")
+                    b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("AdressDetails")
+                    b.Property<string>("AddressDetails")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("City")
@@ -53,6 +53,9 @@ namespace E_commerce.Migrations
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("PurchaseDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -216,7 +219,7 @@ namespace E_commerce.Migrations
             modelBuilder.Entity("E_commerce.Models.BillingInfo", b =>
                 {
                     b.HasOne("E_commerce.Models.User", "User")
-                        .WithMany("billingInfos")
+                        .WithMany("BillingInfos")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -261,11 +264,11 @@ namespace E_commerce.Migrations
 
             modelBuilder.Entity("E_commerce.Models.User", b =>
                 {
+                    b.Navigation("BillingInfos");
+
                     b.Navigation("RefreshTokens");
 
                     b.Navigation("UserForProducts");
-
-                    b.Navigation("billingInfos");
                 });
 #pragma warning restore 612, 618
         }

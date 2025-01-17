@@ -80,5 +80,35 @@ namespace E_commerce.Controllers
             var result = await _context.Products.FirstOrDefaultAsync(x => x.Category == category);
             return Ok(result);
         }
+        [HttpPost("Billing")]
+        public async Task<IActionResult> Billing(BillingProductsDto bill)
+        {
+            var addBilling = _context.BillingInfos.Add(new BillingInfo
+            {
+                Id = Guid.NewGuid(),
+                Name= bill.Name,
+                CompanyName = bill.CompanyName,
+                AddressDetails = bill.AddressDetails,
+                UserId = bill.UserId,
+                Address = bill.Address,
+                City = bill.City,
+                PhoneNumber = bill.PhoneNumber,
+                Email = bill.Email,
+                PurchaseDate = DateTime.Now
+            });
+            for (var i = 0; i < bill.ProductsList.Count; i++) 
+            {
+                var userToProduct = _context.UserForProducts.Add(new UserForProduct
+                {
+                    Id = Guid.NewGuid(),
+                    ProductId = bill.ProductsList[i].Id,
+                    UserId = bill.UserId,
+                    Quantity = bill.Quantity,
+                });
+            }
+          
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
     }
 }

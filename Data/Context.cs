@@ -40,7 +40,7 @@ namespace E_commerce.Data
                 entity.HasKey(entity => entity.Id);
 
                 entity.HasOne(entity => entity.User)
-                .WithMany(entity => entity.billingInfos)
+                .WithMany(entity => entity.BillingInfos)
                 .HasForeignKey(entity => entity.UserId) 
                 .OnDelete(DeleteBehavior.Cascade);
             });

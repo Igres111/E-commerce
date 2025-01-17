@@ -13,7 +13,7 @@
         public string? Coupon { get; set; } = string.Empty;
         public List<Guid> Favorite { get; set; }
         public List<RefreshToken> RefreshTokens { get; set; }
-        public List<UserForProduct> UserForProducts { get; set; }
-        public List<BillingInfo> billingInfos { get; set; }
+        public List<UserForProduct> UserForProducts { get; set; } 
+        public List<BillingInfo> BillingInfos { get; set; }
     }
 }
