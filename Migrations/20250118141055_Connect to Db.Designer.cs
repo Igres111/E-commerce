@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_commerce.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20250117112606_Connect to Db")]
+    [Migration("20250118141055_Connect to Db")]
     partial class ConnecttoDb
     {
         /// <inheritdoc />
@@ -59,6 +59,9 @@ namespace E_commerce.Migrations
 
                     b.Property<DateTime>("PurchaseDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<float>("TotalPrice")
+                        .HasColumnType("real");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");

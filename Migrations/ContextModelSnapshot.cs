@@ -57,6 +57,9 @@ namespace E_commerce.Migrations
                     b.Property<DateTime>("PurchaseDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<float>("TotalPrice")
+                        .HasColumnType("real");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 

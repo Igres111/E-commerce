@@ -46,33 +46,14 @@ namespace E_commerce.Controllers
         [HttpPost("Add-Product")]
         public async Task<IActionResult> AddProduct(AddProductDto product)
         {
-            var result = new Product
-            {
-                Id = Guid.NewGuid(),
-                Name = product.Name,
-                Price = product.Price,
-                Description = product.Description,
-                DiscountPrice = product.DiscountPrice,
-                Color = product.Color,
-                Image = product.Image,
-                Stock = product.Stock,
-                Rating = product.Rating,
-                ReviewCount = product.ReviewCount,
-                Category = product.Category,
-                DiscountPercent = product.DiscountPercent,
-                CreateDate = DateTime.Now,
-                PurchasedCount = product.PurchasedCount
-            };
-            await _context.Products.AddAsync(result);
-            await _context.SaveChangesAsync();
-
+            await _methods.AddProduct(product);
             return Ok("Product Added");
         }
-        [HttpGet("Get-Product/{category}")]
-        public async Task<IActionResult> GetCategory(string category)
+        [HttpGet("Get-Product")]
+        public async Task<IActionResult> GetProductCategory(string category)
         {
-            var result = await _context.Products.FirstOrDefaultAsync(x => x.Category == category);
-            return Ok(result);
+            var list = await _methods.GetCategory(category);
+            return Ok(list);
         }
         [HttpPost("Billing")]
         public async Task<IActionResult> Billing(BillingProductsDto bill)
@@ -100,9 +81,13 @@ namespace E_commerce.Controllers
                     UserId = bill.UserId,
                     Quantity = bill.ProductsList[i].Quantity
                 });
+                var productForUpdate = await _context.Products.FirstOrDefaultAsync(x => x.Id == bill.ProductsList[i].Id);
+                if (productForUpdate != null)
+                {
+                    productForUpdate.Stock -= 1;
+                    productForUpdate.PurchasedCount += 1;
+                }
             }
-          
-            await _context.SaveChangesAsync();
             return Ok();
         }
     }

@@ -10,6 +10,7 @@
         public string City { get; set; } = string.Empty;
         public string PhoneNumber {  get; set; } = string.Empty;
         public string Email {  get; set; } = string.Empty;
+        public float TotalPrice { get; set; }
         public DateTime PurchaseDate { get; set; }
         public Guid UserId { get; set; }
         public User User { get; set; }

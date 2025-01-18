@@ -9,5 +9,7 @@ namespace E_commerce.Repositories.ProductRepos
         public Task<List<GetProductDto>> GetDiscounted();
         public Task<List<GetProductDto>> GetSeller();
         public Task<List<GetProductDto>> GetExplore();
+        public Task AddProduct(AddProductDto product);
+        public Task<List<GetProductDto>> GetCategory(string category);
     }
 }

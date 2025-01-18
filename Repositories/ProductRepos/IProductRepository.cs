@@ -101,5 +101,47 @@ namespace E_commerce.Repositories.ProductRepos
                 DiscountPrice = x.Price
             }).ToList();
         }
+        public async Task AddProduct(AddProductDto product)
+        {
+            var result = new Product
+            {
+                Id = Guid.NewGuid(),
+                Name = product.Name,
+                Price = product.Price,
+                Description = product.Description,
+                DiscountPrice = product.DiscountPrice,
+                Color = product.Color,
+                Image = product.Image,
+                Stock = product.Stock,
+                Rating = product.Rating,
+                ReviewCount = product.ReviewCount,
+                Category = product.Category,
+                DiscountPercent = product.DiscountPercent,
+                CreateDate = DateTime.Now,
+                PurchasedCount = product.PurchasedCount
+            };
+            await _context.Products.AddAsync(result);
+            await _context.SaveChangesAsync();
+        }
+        public async Task<List<GetProductDto>> GetCategory(string category)
+        {
+            var result = _context.Products.Where(x => x.Category == category);
+            return result.Select(x => new GetProductDto
+            {
+                Name = x.Name,
+                Description = x.Description,
+                Price = x.Price,
+                DiscountPercent = x.DiscountPercent,
+                PurchasedCount = x.PurchasedCount,
+                CreateDate = x.CreateDate,
+                Category = x.Category,
+                Image = x.Image,
+                Stock = x.Stock,
+                Rating = x.Rating,
+                ReviewCount = x.ReviewCount,
+                Color = x.Color,
+                DiscountPrice = x.Price
+            }).ToList();
+        }
     }
 }
