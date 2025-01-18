@@ -2,8 +2,9 @@
 using E_commerce.DTOs.ProductDtos;
 using E_commerce.DTOs.UserDtos;
 using E_commerce.Models;
-using E_commerce.Repositories;
+using E_commerce.Repositories.UserRepos;
 using E_commerce.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,7 @@ namespace E_commerce.Controllers
             _methods = methods;
         }
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> GetUsers()
         {
             var result = await _methods.GetUsers();
@@ -35,7 +37,7 @@ namespace E_commerce.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return BadRequest("Invalid data");
+                return BadRequest(ModelState);
             }  
             await _methods.RegisterUser(user);
             return Ok("Registered");
@@ -45,7 +47,7 @@ namespace E_commerce.Controllers
         {
             if(!ModelState.IsValid) 
             {
-                return BadRequest("Invalid data");
+                return BadRequest(ModelState);
             }
            var result = await _methods.LoginUser(user);
             return Ok(result);
@@ -59,6 +61,10 @@ namespace E_commerce.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateInfo(Guid id, UpdateUserDto user )
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             await _methods.UpdateUser(id, user);
             return Ok();
         }

@@ -5,9 +5,10 @@ using E_commerce.DTOs.UserDtos;
 using E_commerce.Models;
 using E_commerce.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
-namespace E_commerce.Repositories
+namespace E_commerce.Repositories.UserRepos
 {
     public class IUserRepository : IUser
     {
@@ -18,10 +19,22 @@ namespace E_commerce.Repositories
             _context = context;
             _token = token;
         }
-        public async Task<List<User>> GetUsers()
+        public async Task<IEnumerable<ReceiveUsersDto>> GetUsers()
         {
             var result = await _context.Users.ToListAsync();
-            return result;
+            return result.Select(x => new ReceiveUsersDto
+            {
+                Id = x.Id,
+                Name = x.Name,
+                LastName = x.LastName,
+                Address = x.Address,
+                PhoneNumber = x.PhoneNumber,
+                Email = x.Email,
+                Password = x.Password,
+                Role = x.Role,
+                Coupon = x.Coupon,
+                Favorite = x.Favorite
+            }).ToList(); ;
         }
         public async Task RegisterUser(RegisterUserDto user)
         {
@@ -46,29 +59,29 @@ namespace E_commerce.Repositories
         public async Task<TokenResponseDto> LoginUser(LoginUserDto user)
         {
             var emailOrPhone = await _context.Users
-                .FirstOrDefaultAsync(el => el.Email == user.EmailOrPhone || el.PhoneNumber == user.EmailOrPhone);
+                .FirstOrDefaultAsync(el => el.Email == user.Email);
 
             if (emailOrPhone != null && BCrypt.Net.BCrypt.Verify(user.Password, emailOrPhone.Password))
             {
                 var tokenExist = await _context.RefreshTokens.FirstOrDefaultAsync(el => el.UserId == emailOrPhone.Id);
-                if (tokenExist != null) 
-                { 
-                 _context.RefreshTokens.Remove(tokenExist);
+                if (tokenExist != null)
+                {
+                    _context.RefreshTokens.Remove(tokenExist);
                 }
-                var accessToken =_token.CreateAccessToken(emailOrPhone);
+                var accessToken = _token.CreateAccessToken(emailOrPhone);
                 var refreshToken = await _token.CreateRefreshTokenAsync(emailOrPhone);
-                return new TokenResponseDto 
+                return new TokenResponseDto
                 {
                     Id = emailOrPhone.Id,
                     AccessToken = accessToken,
                     RefreshToken = refreshToken.Token
                 };
             }
-           throw new Exception("Invalid credentials");
+            throw new Exception("Invalid credentials");
         }
         public async Task UpdateUser(Guid id, UpdateUserDto user)
         {
-            var target = await _context.Users.FirstOrDefaultAsync(el => el.Id == id) 
+            var target = await _context.Users.FirstOrDefaultAsync(el => el.Id == id)
                 ?? throw new Exception("User not found"); ;
             target.Name = user.Name;
             target.LastName = user.LastName;
@@ -100,7 +113,7 @@ namespace E_commerce.Repositories
             await _context.SaveChangesAsync();
             return result.Favorite;
         }
-       public async Task<IEnumerable<AddProductDto>> GetFav(Guid userId)
+        public async Task<IEnumerable<ReceiveFavProduct>> GetFav(Guid userId)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
             if (user != null)
@@ -108,7 +121,7 @@ namespace E_commerce.Repositories
                 var result = await _context.Products
                      .Where(product => user.Favorite.Contains(product.Id))
                      .ToListAsync();
-                return result.Select(x => new AddProductDto
+                return result.Select(x => new ReceiveFavProduct
                 {
                     Name = x.Name,
                     Price = x.Price,

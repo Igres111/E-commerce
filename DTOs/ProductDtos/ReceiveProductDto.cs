@@ -15,5 +15,6 @@
         public string Category { get; set; }
         public int DiscountPercent { get; set; }
         public DateTime CreateDate { get; set; }
+        public int Quantity { get; set; }
     }
 }

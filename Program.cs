@@ -1,6 +1,7 @@
 using DotNetEnv;
 using E_commerce.Data;
-using E_commerce.Repositories;
+using E_commerce.Repositories.ProductRepos;
+using E_commerce.Repositories.UserRepos;
 using E_commerce.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,7 @@ builder.Services.AddDbContext<Context>(options =>
 });
 builder.Services.AddScoped<TokenGenerator>();
 builder.Services.AddScoped<IUser, IUserRepository>();
+builder.Services.AddScoped<IProduct, IProductRepository>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(x =>
     {

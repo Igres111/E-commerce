@@ -12,7 +12,6 @@ namespace E_commerce.DTOs.ProductDtos
         public string City { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public int Quantity { get; set; }
         public Guid UserId { get; set; }
         public DateTime PurchaseDate { get; set; }
         public List<ReceiveProductDto> ProductsList { get; set; }
