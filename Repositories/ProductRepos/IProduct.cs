@@ -11,5 +11,7 @@ namespace E_commerce.Repositories.ProductRepos
         public Task<List<GetProductDto>> GetExplore();
         public Task AddProduct(AddProductDto product);
         public Task<List<GetProductDto>> GetCategory(string category);
+        public Task BillingProducts(BillingProductsDto bill);
+        public Task<List<BillingInfo>> GetBillingInfo();
     }
 }

@@ -14,6 +14,7 @@ namespace E_commerce.DTOs.ProductDtos
         public string Email { get; set; } = string.Empty;
         public Guid UserId { get; set; }
         public DateTime PurchaseDate { get; set; }
+        public float TotalPrice { get; set; }
         public List<ReceiveProductDto> ProductsList { get; set; }
     }
 }

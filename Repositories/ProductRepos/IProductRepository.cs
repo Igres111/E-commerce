@@ -126,22 +126,66 @@ namespace E_commerce.Repositories.ProductRepos
         public async Task<List<GetProductDto>> GetCategory(string category)
         {
             var result = _context.Products.Where(x => x.Category == category);
-            return result.Select(x => new GetProductDto
+            if (result != null)
             {
-                Name = x.Name,
-                Description = x.Description,
-                Price = x.Price,
-                DiscountPercent = x.DiscountPercent,
-                PurchasedCount = x.PurchasedCount,
-                CreateDate = x.CreateDate,
-                Category = x.Category,
-                Image = x.Image,
-                Stock = x.Stock,
-                Rating = x.Rating,
-                ReviewCount = x.ReviewCount,
-                Color = x.Color,
-                DiscountPrice = x.Price
-            }).ToList();
+                return await result.Select(x => new GetProductDto
+                {
+                    Name = x.Name,
+                    Description = x.Description,
+                    Price = x.Price,
+                    DiscountPercent = x.DiscountPercent,
+                    PurchasedCount = x.PurchasedCount,
+                    CreateDate = x.CreateDate,
+                    Category = x.Category,
+                    Image = x.Image,
+                    Stock = x.Stock,
+                    Rating = x.Rating,
+                    ReviewCount = x.ReviewCount,
+                    Color = x.Color,
+                    DiscountPrice = x.Price
+                }).ToListAsync();
+            }
+            throw new Exception("Category not found");
+        }
+        public async Task BillingProducts(BillingProductsDto bill)
+        {
+            var addBilling = _context.BillingInfos.Add(new BillingInfo
+            {
+                Id = Guid.NewGuid(),
+                Name = bill.Name,
+                CompanyName = bill.CompanyName,
+                AddressDetails = bill.AddressDetails,
+                UserId = bill.UserId,
+                Address = bill.Address,
+                City = bill.City,
+                PhoneNumber = bill.PhoneNumber,
+                Email = bill.Email,
+                PurchaseDate = DateTime.Now,
+                TotalPrice = bill.TotalPrice,
+            });
+            for (var i = 0; i < bill.ProductsList.Count; i++)
+            {
+                var userToProduct = _context.UserForProducts.Add(new UserForProduct
+                {
+                    Id = Guid.NewGuid(),
+                    ProductId = bill.ProductsList[i].Id,
+                    PurchaseDate = DateTime.Now,
+                    UserId = bill.UserId,
+                    Quantity = bill.ProductsList[i].Quantity
+                });
+                var productForUpdate = await _context.Products.FirstOrDefaultAsync(x => x.Id == bill.ProductsList[i].Id);
+                if (productForUpdate != null)
+                {
+                    productForUpdate.Stock -= 1;
+                    productForUpdate.PurchasedCount += 1;
+                }
+            }
+            await _context.SaveChangesAsync();
+        }
+        public async Task<List<BillingInfo>> GetBillingInfo()
+        {
+            var result = await _context.BillingInfos.ToListAsync();
+            return result;
         }
     }
 }

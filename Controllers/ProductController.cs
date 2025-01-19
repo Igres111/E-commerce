@@ -43,52 +43,37 @@ namespace E_commerce.Controllers
             var list = await _methods.GetExplore();
             return Ok(list);
         }
-        [HttpPost("Add-Product")]
-        public async Task<IActionResult> AddProduct(AddProductDto product)
-        {
-            await _methods.AddProduct(product);
-            return Ok("Product Added");
-        }
-        [HttpGet("Get-Product")]
+        [HttpGet("Get-Product/Category")]
         public async Task<IActionResult> GetProductCategory(string category)
         {
             var list = await _methods.GetCategory(category);
             return Ok(list);
         }
+        [HttpPost("Add-Product")]
+        public async Task<IActionResult> AddProduct(AddProductDto product)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            await _methods.AddProduct(product);
+            return Ok("Product Added");
+        }
         [HttpPost("Billing")]
         public async Task<IActionResult> Billing(BillingProductsDto bill)
         {
-            var addBilling = _context.BillingInfos.Add(new BillingInfo
+            if(!ModelState.IsValid)
             {
-                Id = Guid.NewGuid(),
-                Name= bill.Name,
-                CompanyName = bill.CompanyName,
-                AddressDetails = bill.AddressDetails,
-                UserId = bill.UserId,
-                Address = bill.Address,
-                City = bill.City,
-                PhoneNumber = bill.PhoneNumber,
-                Email = bill.Email,
-                PurchaseDate = DateTime.Now
-            });
-            for (var i = 0; i < bill.ProductsList.Count; i++) 
-            {
-                var userToProduct = _context.UserForProducts.Add(new UserForProduct
-                {
-                    Id = Guid.NewGuid(),
-                    ProductId = bill.ProductsList[i].Id,
-                    PurchaseDate = DateTime.Now,
-                    UserId = bill.UserId,
-                    Quantity = bill.ProductsList[i].Quantity
-                });
-                var productForUpdate = await _context.Products.FirstOrDefaultAsync(x => x.Id == bill.ProductsList[i].Id);
-                if (productForUpdate != null)
-                {
-                    productForUpdate.Stock -= 1;
-                    productForUpdate.PurchasedCount += 1;
-                }
+                return BadRequest(ModelState);
             }
+            await _methods.BillingProducts(bill);
             return Ok();
+        }
+        [HttpGet("Billing-Info")]
+        public async Task<IActionResult> GetBillingInfo()
+        {
+            var list = await _methods.GetBillingInfo();
+            return Ok(list);
         }
     }
 }

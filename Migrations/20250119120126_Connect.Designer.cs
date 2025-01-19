@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_commerce.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20250118141055_Connect to Db")]
-    partial class ConnecttoDb
+    [Migration("20250119120126_Connect")]
+    partial class Connect
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

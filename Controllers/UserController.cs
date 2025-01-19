@@ -78,9 +78,9 @@ namespace E_commerce.Controllers
         public async Task<ActionResult> RemoveFavorite(UserFavProduct favorite)
         {
             var favs = await _methods.RemoveFav(favorite);
-            return Ok(favs);
+           return Ok(favs);
         }
-        [HttpGet("Get-Favorites/{userId}")]
+        [HttpGet("Get-Favorites")]
         public async Task<ActionResult> GetFavorites(Guid userId)
         {
             var result = await _methods.GetFav(userId);
