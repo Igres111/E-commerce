@@ -4,9 +4,12 @@ using E_commerce.DTOs.TokenDtos;
 using E_commerce.DTOs.UserDtos;
 using E_commerce.Models;
 using E_commerce.Services;
+using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
+using MimeKit;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace E_commerce.Repositories.UserRepos
 {
@@ -139,6 +142,30 @@ namespace E_commerce.Repositories.UserRepos
                 });
             }
             throw new Exception("User doesn't exist");
+        }
+        public void SendEmail(SendMailDto mail)
+        {
+            string fromMail = "sergikaralashvili@gmail.com";
+            string fromPassword = "hogr jzlk chec eyxs\r\n";
+            var email = new MimeMessage();
+
+            email.From.Add(new MailboxAddress("Baqari", fromMail));
+            email.To.Add(new MailboxAddress(mail.Name, mail.Address));
+
+            email.Subject = mail.Subject;
+            email.Body = new TextPart(MimeKit.Text.TextFormat.Html)
+            {
+                Text = $"<html><body>{mail.Text}<body></html>"
+            };
+
+            using (var smtp = new SmtpClient())
+            {
+                smtp.Connect("smtp.gmail.com", 587, false);
+
+                smtp.Authenticate("sergikaralashvili@gmail.com", fromPassword);
+                smtp.Send(email);
+                smtp.Disconnect(true);
+            }
         }
     }
 }

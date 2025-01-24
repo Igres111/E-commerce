@@ -15,5 +15,6 @@ namespace E_commerce.Repositories.UserRepos
         public Task<List<Guid>> AddFav(UserFavProduct favorite);
         public Task<List<Guid>> RemoveFav(UserFavProduct favorite);
         public Task<IEnumerable<ReceiveFavProduct>> GetFav(Guid userId);
+        public void SendEmail(SendMailDto mail);
     }
 }

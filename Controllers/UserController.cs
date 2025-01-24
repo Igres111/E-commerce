@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MimeKit;
 using System.Linq;
+using MailKit.Net.Smtp;
 
 namespace E_commerce.Controllers
 {
@@ -85,6 +87,12 @@ namespace E_commerce.Controllers
         {
             var result = await _methods.GetFav(userId);
             return Ok(result);
+        }
+        [HttpPost("Send-to-Email")]
+        public ActionResult SendEmail(SendMailDto mail)
+        {
+            _methods.SendEmail(mail);
+            return Ok("Email Sent");
         }
     }
 }

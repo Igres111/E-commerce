@@ -174,10 +174,13 @@ namespace E_commerce.Repositories.ProductRepos
                     Quantity = bill.ProductsList[i].Quantity
                 });
                 var productForUpdate = await _context.Products.FirstOrDefaultAsync(x => x.Id == bill.ProductsList[i].Id);
-                if (productForUpdate != null)
+                if (productForUpdate != null && productForUpdate.Stock > 0)
                 {
                     productForUpdate.Stock -= 1;
                     productForUpdate.PurchasedCount += 1;
+                } else
+                {
+                    throw new Exception("Product is out of stock");
                 }
             }
             await _context.SaveChangesAsync();
