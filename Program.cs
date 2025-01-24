@@ -30,6 +30,7 @@ builder.Services.AddDbContext<Context>(options =>
 builder.Services.AddScoped<TokenGenerator>();
 builder.Services.AddScoped<IUser, IUserRepository>();
 builder.Services.AddScoped<IProduct, IProductRepository>();
+builder.Services.AddScoped<IToken, TokenGenerator>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(x =>
     {

@@ -13,7 +13,7 @@ namespace E_commerce.Repositories.UserRepos
     public class IUserRepository : IUser
     {
         public readonly Context _context;
-        public readonly TokenGenerator _token;
+        public readonly IToken _token;
         public IUserRepository(Context context, TokenGenerator token)
         {
             _context = context;

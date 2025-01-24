@@ -8,7 +8,7 @@ using System.Text;
 
 namespace E_commerce.Services
 {
-    public class TokenGenerator
+    public class TokenGenerator:IToken
     {
         public readonly Context _context;
         public readonly IConfiguration _configuration;

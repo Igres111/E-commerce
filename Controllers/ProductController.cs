@@ -72,6 +72,10 @@ namespace E_commerce.Controllers
         [HttpGet("Billing-Info")]
         public async Task<IActionResult> GetBillingInfo()
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var list = await _methods.GetBillingInfo();
             return Ok(list);
         }
