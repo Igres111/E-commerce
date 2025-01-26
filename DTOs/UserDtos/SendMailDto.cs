@@ -1,10 +1,15 @@
-﻿namespace E_commerce.DTOs.UserDtos
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace E_commerce.DTOs.UserDtos
 {
     public class SendMailDto
     {
-        public string Name { get; set; }
-        public string Address { get; set; }
-        public string Subject { get; set; }
-        public string Text { get; set; }
+        [Required]
+        public string Name { get; set; } = string.Empty;
+        [Required]
+        public string Address { get; set; } = string.Empty;
+        public string Subject { get; set; } = string.Empty;
+        [Required]
+        public string Text { get; set; } = string.Empty;
     }
 }

@@ -91,6 +91,10 @@ namespace E_commerce.Controllers
         [HttpPost("Send-to-Email")]
         public ActionResult SendEmail(SendMailDto mail)
         {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             _methods.SendEmail(mail);
             return Ok("Email Sent");
         }
