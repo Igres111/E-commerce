@@ -145,11 +145,12 @@ namespace E_commerce.Repositories.UserRepos
         }
         public void SendEmail(SendMailDto mail)
         {
-            string fromMail = "sergikaralashvili@gmail.com";
-            string fromPassword = "hogr jzlk chec eyxs\r\n";
+            string? fromMail = Environment.GetEnvironmentVariable("FromMail"); 
+            string? fromPassword = Environment.GetEnvironmentVariable("FromPassword");
+
             var email = new MimeMessage();
 
-            email.From.Add(new MailboxAddress("Baqari", fromMail));
+            email.From.Add(new MailboxAddress("E-Commerce", fromMail));
             email.To.Add(new MailboxAddress(mail.Name, mail.Address));
 
             email.Subject = mail.Subject;
@@ -162,7 +163,7 @@ namespace E_commerce.Repositories.UserRepos
             {
                 smtp.Connect("smtp.gmail.com", 587, false);
 
-                smtp.Authenticate("sergikaralashvili@gmail.com", fromPassword);
+                smtp.Authenticate(fromMail, fromPassword);
                 smtp.Send(email);
                 smtp.Disconnect(true);
             }
